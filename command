@@ -1,2 +1,1 @@
-./start.sh 5b85fb06-1590-4a3e-bf62-6d7d57e32dba test-bot-1 pybot 1 
-./start.sh 5b85fb06-1590-4a3e-bf62-6d7d57e32dba test-bot-2 pybot 2
+./start.sh 863d2cd7-af11-4325-aad1-f75c7fe653ad test-bot-1 pybot 1 test-bot-2 pybot 2
