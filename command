@@ -1,1 +1,0 @@
-./start.sh 863d2cd7-af11-4325-aad1-f75c7fe653ad test-bot-1 pybot 1 test-bot-2 pybot 2

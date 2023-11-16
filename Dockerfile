@@ -1,10 +1,13 @@
-FROM python:3.10.13-alpine3.17
+FROM pytorch/pytorch:latest
 
 WORKDIR /
 
 COPY requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
+
+RUN pip install "uvicorn[standard]"
+
+RUN pip install fastapi
 
 CMD [ "python", "./run.py" ]

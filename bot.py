@@ -5,11 +5,13 @@ import time
 from config import *
 from pydantic import BaseModel
 from tictac import TicTacToe
-from algorithm import *
+from algorithmML import *
 
 args = {
-    'C': 1.41,
-    'num_searches': 25
+    'C': 2,
+    'num_searches': 10,
+    'dirichlet_epsilon': 0.,
+    'dirichlet_alpha': 0.3
 }
 
 app = FastAPI()
@@ -31,9 +33,15 @@ def connect():
             return fig
         time.sleep(10)
 
-tictactoe = TicTacToe()
-mcts = MCTS(tictactoe, args)
-state = tictactoe.get_initial_state()
+game = TicTacToe()
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+model = ResNet(game, 19, 128, device)
+model.load_state_dict(torch.load("model.pt", map_location=device))
+model.eval()
+
+mcts = MCTS(game, args, model)
+state = game.get_initial_state()
 
 figures = 'xo'
 
@@ -49,10 +57,10 @@ indexies = set()
 
 def train(player, s):
     global state, indexies
-    neutral_state = tictactoe.change_perspective(state, player)
+    neutral_state = game.change_perspective(state, player)
     mcts_probs = mcts.search(neutral_state)
     index = np.argmax(mcts_probs)
-    state = tictactoe.get_next_state(state, index, player)
+    state = game.get_next_state(state, index, player)
 
     s = s[:index] + players_[player] + s[index+1:]
     return s
@@ -62,7 +70,7 @@ def transform(s):
     n = np.where(s == 'o', -1, s)
     n = np.where(n == '_', 0, n)
     n = np.where(n == 'x', 1, n)
-    n = n.reshape(19,19).astype('int64')
+    n = n.reshape(19, 19).astype('int64')
 
     return n
 
@@ -81,6 +89,6 @@ async def make_turn(field: Field):
 
     q = train(player_bot, s)
     elapsed = time.time() - t
-    print(elapsed)
+    print("Time: ", elapsed)
 
     return q
