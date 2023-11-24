@@ -2,10 +2,19 @@
 __pycache__/
 *.py[cod]
 *$py.class
+<<<<<<< HEAD
 
 # C extensions
 *.so
 
+=======
+.test.py
+# C extensions
+*.so
+
+not_fired.tar
+
+>>>>>>> master
 # Distribution / packaging
 .Python
 build/
